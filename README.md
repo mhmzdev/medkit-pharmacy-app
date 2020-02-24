@@ -1,6 +1,6 @@
 # medkit
 
-A new Flutter application.
+A Medical app that will get you sufficient knowledge about various diseases that you can treat with medicines at your home.
 
 ## Getting Started
 
