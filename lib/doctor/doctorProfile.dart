@@ -1,68 +1,82 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/doctor/doctorLogin.dart';
 import 'package:medkit/otherWidgetsAndScreen/backBtn.dart';
 
-
 class DoctorProfile extends StatelessWidget {
   DoctorDetails doctorDetails;
-
   DoctorProfile({this.doctorDetails});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+        body: SafeArea(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           BackBtn(),
-          SizedBox(height: MediaQuery.of(context).size.height/6,),
+          SizedBox(height: ScreenUtil.instance.setHeight(50),),
           Center(
-            child: Container(
-              height: MediaQuery.of(context).size.height/1.55,
-              child: Column(
-                children: <Widget>[
-                  Hero(
-                    tag: 'docPic',
-                    child: CircleAvatar(
-                      radius: 80,
-                      backgroundImage: NetworkImage(doctorDetails.photoUrl),
+            child: Column(
+              children: <Widget>[
+                Hero(
+                  tag: 'docPic',
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundImage:
+                        NetworkImage(doctorDetails.photoUrl),
+                  ),
+                ),
+                SizedBox(
+                  height: ScreenUtil.instance.setHeight(25),
+                ),
+                Text(
+                  'Dr. ' + doctorDetails.userName,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: ScreenUtil.instance.setSp(24)),
+                ),
+                SizedBox(
+                  height: ScreenUtil.instance.setHeight(7),
+                ),
+                Text(
+                  doctorDetails.userEmail,
+                  style: TextStyle(
+                      fontSize: ScreenUtil.instance.setSp(16),
+                      fontWeight: FontWeight.w300),
+                ),
+                SizedBox(
+                  height: ScreenUtil.instance.setHeight(20),
+                ),
+                RaisedButton.icon(
+                    color: Colors.white,
+                    onPressed: () {
+                      _logOutAlertBox(context);
+                    },
+                    icon: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.red,
                     ),
-                  ),
-                  SizedBox(height: 20,),
-                  Text(
-                    'Dr. ' + doctorDetails.userName,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                  ),SizedBox(height: 5,),
-                  Text(doctorDetails.userEmail, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),),
-                  SizedBox(height: 20,),
-                  RaisedButton.icon(
-                      color: Colors.white,
-                      onPressed: () {
-                        _logOutAlertBox(context);
-                      },
-                      icon: Icon(
-                        Icons.exit_to_app,
-                        color: Colors.red,
-                      ),
-                      label: Text(
-                        'Log Out',
-                        style: TextStyle(color: Colors.red),
-                      )),
-                  SizedBox(height: MediaQuery.of(context).size.height/5.5,),
-                  Text(
-                    'Version',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text('v 0.1'), SizedBox(height: 10,)
-                ],
-              ),
+                    label: Text(
+                      'Log Out',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                SizedBox(
+                  height: ScreenUtil.instance.setHeight(190),
+                ),
+                Text(
+                  'Version',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('v 0.1'),
+              ],
             ),
           ),
         ],
-      )
-    );
+      ),
+    ));
   }
 
   final GoogleSignIn _gSignIn = GoogleSignIn();
@@ -74,17 +88,19 @@ class DoctorProfile extends StatelessWidget {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)
+          ),
           title: new Text(
-            "Log Out",
+            "Are you Sure?",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: new Text("Are You Sure?"),
+          content: Text("You are about to Log Out!"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new RaisedButton(
-              shape: StadiumBorder(),
+            FlatButton(
               color: Colors.white,
-              child: new Text(
+              child: Text(
                 "Close",
                 style: TextStyle(color: Colors.blue),
               ),
@@ -92,10 +108,9 @@ class DoctorProfile extends StatelessWidget {
                 Navigator.of(context).pop();
               },
             ),
-            new RaisedButton(
-              shape: StadiumBorder(),
+            FlatButton(
               color: Colors.white,
-              child: new Text(
+              child: Text(
                 "Log Out",
                 style: TextStyle(color: Colors.red),
               ),

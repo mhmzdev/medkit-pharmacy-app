@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medkit/doctor/delDisease.dart';
 import 'package:medkit/otherWidgetsAndScreen/medDetails.dart';
-import 'package:medkit/doctor/doctorPanel.dart';
-
-import '../doctor/delDisease.dart';
+import 'package:toast/toast.dart';
 
 class CustomTile extends StatefulWidget {
   final bool delBtn;
@@ -18,13 +15,15 @@ class CustomTile extends StatefulWidget {
 }
 
 class _CustomTileState extends State<CustomTile> {
-  tileNumber(int num) {
-    if (num % 2 == 0) {
-      return true;
-    } else {
-      return false;
-    }
+  _deleteDisease(BuildContext context) {
+    Firestore.instance
+        .collection('Diseases')
+        .document(widget.snapshot.data['disName'])
+        .delete();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DeletingWait()));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,8 @@ class _CustomTileState extends State<CustomTile> {
         Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) => MedDetails(
+                builder: (context) =>
+                    MedDetails(
                       snapshot: widget.snapshot,
                     )));
       },
@@ -61,34 +61,76 @@ class _CustomTileState extends State<CustomTile> {
               child: FlatButton(
                 onPressed: () {
                   widget.delBtn
-                      ? Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => DelDisease(
-                                    snapshot: widget.snapshot,
-                                  )))
+                      ? _deleteDisease(context)
                       : Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => MedDetails(
-                                    snapshot: widget.snapshot,
-                                  )));
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) =>
+                              MedDetails(
+                                snapshot: widget.snapshot,
+                              )));
                 },
                 shape: StadiumBorder(),
                 child: widget.delBtn
                     ? Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                        size: 30,
-                      )
+                  Icons.delete,
+                  color: Colors.red,
+                  size: 30,
+                )
                     : Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.black,
-                        size: 20,
-                      ),
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                  size: 20,
+                ),
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class DeletingWait extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pop(context);
+      Toast.show("Deleted Successfully!", context, backgroundColor: Colors.red, duration: Toast.LENGTH_LONG);
+    });
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                ),
+                SizedBox(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1,
+                ),
+                Text(
+                  'Deleting Please Wait...',
+                  style: TextStyle(color: Colors.red, fontSize: 17),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

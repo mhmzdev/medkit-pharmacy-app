@@ -2,21 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medkit/animations/topAnimation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medkit/animations/fadeAnimation.dart';
 import 'package:medkit/animations/bottomAnimation.dart';
-import 'package:medkit/doctor/doctorLogin.dart';
-import 'package:medkit/patient/patientLogin.dart';
-import 'package:medkit/patient/patientPanel.dart';
-
-import 'aboutUs.dart';
 
 class UserType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final width = screenSize.width;
+    final height = screenSize.height;
     Future<bool> _onWillPop() async {
       return (await showDialog(
             context: context,
             builder: (context) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)
+              ),
               title: new Text(
                 "Exit Application",
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -24,10 +26,9 @@ class UserType extends StatelessWidget {
               content: new Text("Are You Sure?"),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new RaisedButton(
-                  shape: StadiumBorder(),
+                 FlatButton(
                   color: Colors.white,
-                  child: new Text(
+                  child:  Text(
                     "Close",
                     style: TextStyle(color: Colors.blue),
                   ),
@@ -35,10 +36,9 @@ class UserType extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                new RaisedButton(
-                  shape: StadiumBorder(),
+                FlatButton(
                   color: Colors.white,
-                  child: new Text(
+                  child: Text(
                     "Yes",
                     style: TextStyle(color: Colors.red),
                   ),
@@ -55,73 +55,78 @@ class UserType extends StatelessWidget {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                width: MediaQuery.of(context).size.width,
-                child: FadeAnimation(
+          child: Container(
+            margin: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+            height: height,
+            width: width,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height:  height * 0.08,),
+                FadeAnimation(
                   0.3,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         'Category',
-                        style: TextStyle(color: Colors.black, fontSize: 30),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: ScreenUtil.instance.setSp(35)),
                       ),
                       GestureDetector(
                         onTap: () => _exitAlert(context),
                         child: Icon(
                           Icons.exit_to_app,
-                          size: 30,
+                          size: height * 0.045,
                         ),
                       )
                     ],
                   ),
                 ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    FadeAnimation(
-                      0.4,
-                      CircleAvatar(
-                        backgroundColor: Colors.black.withOpacity(0.2),
-                        radius: 60,
-                        child: Image(image: AssetImage("assets/doctor.png")),
-                      ),
-                    ),
-                    WidgetAnimator(patDocBtn('Doctor', context)),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    FadeAnimation(
-                      0.4,
-                      CircleAvatar(
-                        backgroundColor: Colors.black.withOpacity(0.2),
-                        radius: 60,
-                        child: Image(image: AssetImage("assets/patient.png")),
-                      ),
-                    ),
-                    WidgetAnimator(patDocBtn('Patient', context)),
-                    SizedBox(height: 70,),
-                    GestureDetector(
-                      onTap: () => Navigator.push(context, new MaterialPageRoute(builder: (context) => AboutUs())),
-                      child: Column(
-                        children: <Widget>[
-                          Text('Version', style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text('V 0.1', style: TextStyle(fontSize: 12),)
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5,)
-                  ],
+                SizedBox(height: height * 0.08,),
+                FadeAnimation(
+                  0.4,
+                  CircleAvatar(
+                    backgroundColor: Colors.black.withOpacity(0.2),
+                    radius: 60,
+                    child: Image(image: AssetImage("assets/doctor.png")),
+                  ),
                 ),
-              )
-            ],
+                WidgetAnimator(patDocBtn('Doctor', context)),
+                SizedBox(
+                  height: height * 0.1,
+                ),
+                FadeAnimation(
+                  0.4,
+                  CircleAvatar(
+                    backgroundColor: Colors.black.withOpacity(0.2),
+                    radius: 60,
+                    child: Image(image: AssetImage("assets/patient.png")),
+                  ),
+                ),
+                WidgetAnimator(patDocBtn('Patient', context)),
+                SizedBox(
+                  height: height * 0.12,
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, 'AboutUs'),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Version',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'V 0.1',
+                        style: TextStyle(
+                            fontSize: ScreenUtil.instance.setSp(12)),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

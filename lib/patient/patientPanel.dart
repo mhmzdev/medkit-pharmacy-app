@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:medkit/animations/topAnimation.dart';
+import 'package:medkit/animations/fadeAnimation.dart';
 import 'package:medkit/otherWidgetsAndScreen/medDetails.dart';
 import 'package:medkit/otherWidgetsAndScreen/customListTiles.dart';
 import 'package:medkit/patient/patientLogin.dart';
@@ -38,62 +38,63 @@ class _PatientPanelState extends State<PatientPanel> {
     );
   }
 
-
   Future<bool> _onWillPop() async {
     return (await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text(
-              "Log Out",
-              style: TextStyle(fontWeight: FontWeight.bold),
+      context: context,
+      builder: (context) => new AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)
+        ),
+        title: new Text(
+          "Are You Sure?",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: new Text("You are about to Log Out!"),
+        actions: <Widget>[
+          new FlatButton(
+            color: Colors.white,
+            child: new Text(
+              "Close",
+              style: TextStyle(color: Colors.blue),
             ),
-            content: new Text("Are You Sure?"),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new RaisedButton(
-                shape: StadiumBorder(),
-                color: Colors.white,
-                child: new Text(
-                  "Close",
-                  style: TextStyle(color: Colors.blue),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              new RaisedButton(
-                shape: StadiumBorder(),
-                color: Colors.white,
-                child: new Text(
-                  "Log Out",
-                  style: TextStyle(color: Colors.red),
-                ),
-                onPressed: () {
-                  _gSignIn.signOut();
-                  int count = 0;
-                  Navigator.of(context).popUntil((_) => count++ >= 2);
-                },
-              ),
-            ],
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-        )) ??
+          new FlatButton(
+            color: Colors.white,
+            child: new Text(
+              "Log Out",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () {
+              _gSignIn.signOut();
+              int count = 0;
+              Navigator.of(context).popUntil((_) => count++ >= 2);
+            },
+          ),
+        ],
+      ),
+    )) ??
         false;
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
-          children: <Widget>[
-            iconContainer(),
-            SafeArea(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.fromLTRB(0, height * 0.03, 0, 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     GestureDetector(
                       onTap: () => Navigator.push(
@@ -110,9 +111,12 @@ class _PatientPanelState extends State<PatientPanel> {
                                 NetworkImage(widget.detailsUser.photoUrl)),
                       ),
                     ),
+                    SizedBox(
+                      width: width * 0.04,
+                    ),
                     Container(
-                      width: MediaQuery.of(context).size.width / 1.25,
-                      height: 40,
+                      width: width * 0.7,
+                      height: height * 0.052,
                       child: WidgetAnimator(
                         TextFormField(
                           keyboardType: TextInputType.text,
@@ -122,6 +126,7 @@ class _PatientPanelState extends State<PatientPanel> {
                               labelText: 'Disease/Medicine',
                               prefixIcon: WidgetAnimator(Icon(
                                 Icons.search,
+                                size: height * 0.03,
                               )),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30))),
@@ -131,91 +136,94 @@ class _PatientPanelState extends State<PatientPanel> {
                   ],
                 ),
               ),
-            ),
-            Container(
-                margin: EdgeInsets.fromLTRB(110, 150, 0, 0),
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 15,
-                    ),
-                    FadeAnimation(
-                      0.3,
-                      Column(
+              Container(
+                height: height * 0.1,
+                width: width,
+                  margin: EdgeInsets.fromLTRB(
+                      0, height * 0.15, 0, 0),
+                  child: FadeAnimation(
+                    0.3,
+                    Center(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             "Patient's",
                             style: GoogleFonts.abel(
-                                fontSize: 30, fontWeight: FontWeight.bold),
+                                fontSize: ScreenUtil.instance.setSp(33),
+                                fontWeight: FontWeight.bold),
                           ),
                           Text(
                             '          Panel',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                                fontSize: ScreenUtil.instance.setSp(20)),
                           )
                         ],
                       ),
-                    )
-                  ],
-                )),
-            FutureBuilder(
-              future: getDiseaseInfo(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: WidgetAnimator(
-                      CircularProgressIndicator(
-                        valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.black),
-                      ),
                     ),
-                  );
-                } else {
-                  return Container(
-                    margin: EdgeInsets.fromLTRB(0, 260, 0, 0),
-                    child: ListView.separated(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      separatorBuilder: (context, index) => Divider(
-                        color: Colors.transparent,
+                  )),
+              FutureBuilder(
+                future: getDiseaseInfo(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: WidgetAnimator(
+                        CircularProgressIndicator(
+                          valueColor:
+                              new AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
                       ),
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return WidgetAnimator(
-                          CustomTile(
-                            delBtn: false,
-                            snapshot: snapshot.data[index],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget iconContainer() {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: 60,
-            right: -20,
-            child: FadeAnimation(
-              1,
-              Image(
-                height: 155,
-                image: AssetImage('assets/bigPat.png'),
+                    );
+                  } else {
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(
+                          0, height * 0.32, 0, 0),
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil.instance.setWidth(10),
+                            vertical: ScreenUtil.instance.setWidth(10)),
+                        separatorBuilder: (context, index) => Divider(
+                          color: Colors.transparent,
+                        ),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return WidgetAnimator(
+                            CustomTile(
+                              delBtn: false,
+                              snapshot: snapshot.data[index],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
               ),
-            ),
+              Positioned(
+                  top: ScreenUtil.instance.setWidth(70),
+                  right: ScreenUtil.instance.setWidth(-20),
+                  child: ShaderMask(
+                    shaderCallback: (rect) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(1.0),
+                          Colors.black.withOpacity(1.0),
+                          Colors.black.withOpacity(0.5),
+                        ],
+                      ).createShader(
+                          Rect.fromLTRB(0, 0, rect.width, rect.height));
+                    },
+                    blendMode: BlendMode.dstIn,
+                    child: Image(
+                        height: ScreenUtil.instance.setHeight(200),
+                        image: AssetImage('assets/bigPat.png')),
+                  )),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

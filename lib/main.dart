@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medkit/animations/topAnimation.dart';
 import 'package:medkit/doctor/addDisease.dart';
-import 'package:medkit/doctor/delDisease.dart';
 import 'package:medkit/doctor/doctorLogin.dart';
-import 'package:medkit/doctor/doctorPanel.dart';
-import 'package:medkit/otherWidgetsAndScreen/medDetails.dart';
+import 'package:medkit/otherWidgetsAndScreen/aboutUs.dart';
 import 'package:medkit/otherWidgetsAndScreen/userType.dart';
 import 'package:medkit/patient/patientLogin.dart';
-import 'package:medkit/patient/patientPanel.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'animations/fadeAnimation.dart';
 
 void main() => runApp(MedKitApp());
 
@@ -33,6 +31,7 @@ class MedKitApp extends StatelessWidget {
         'DoctorLogin' : (context) => DoctorLogin(),
         'AddDisease' : (context) => AddDisease(),
         'PatientLogin' : (context) => PatientLogin(),
+        'AboutUs' : (context) => AboutUs()
       },
     );
   }
@@ -114,11 +113,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         systemNavigationBarColor: Colors.black, // navigation bar color
         statusBarColor: Colors.black.withOpacity(0.1)));
     final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        width: double.infinity,
+        width: width,
         child: Stack(
           children: <Widget>[
             Container(
@@ -132,8 +132,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   )),
             ),
             Positioned(
-              top: 40,
-              right: -125,
+              top: height * 0.05,
+              left: width - 240,
               child: FadeAnimation(
                 1,
                 Container(
@@ -143,7 +143,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               ),
             ),
             Container(
-              width: double.infinity,
+              width: width,
               padding: EdgeInsets.all(20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,

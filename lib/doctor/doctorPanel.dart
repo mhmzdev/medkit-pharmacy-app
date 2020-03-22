@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/doctor/addDisease.dart';
@@ -32,15 +33,16 @@ class _DoctorPanelState extends State<DoctorPanel> {
     return (await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)
+            ),
             title: new Text(
-              "Log Out",
+              "Are You Sure?",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            content: new Text("Are You Sure?"),
+            content: new Text("You are about to Log Out!"),
             actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new RaisedButton(
-                shape: StadiumBorder(),
+              new FlatButton(
                 color: Colors.white,
                 child: new Text(
                   "Close",
@@ -50,8 +52,7 @@ class _DoctorPanelState extends State<DoctorPanel> {
                   Navigator.of(context).pop();
                 },
               ),
-              new RaisedButton(
-                shape: StadiumBorder(),
+              new FlatButton(
                 color: Colors.white,
                 child: new Text(
                   "Log Out",
@@ -71,194 +72,170 @@ class _DoctorPanelState extends State<DoctorPanel> {
 
   @override
   Widget build(BuildContext context) {
-
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-          body: Stack(
-            children: <Widget>[
-              Positioned(
-                  top: 50,
-                  right: -20,
-                  child: Image(
-                      height: 190, image: AssetImage('assets/bigDoc.png'))),
-              Positioned(
-                top: 40,
-                child: Hero(
-                  tag: 'docPic',
-                  child: FlatButton(
-                      shape: CircleBorder(),
-                      onPressed: () =>
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => DoctorProfile(
-                                      doctorDetails: widget.detailsUser))),
-                      child: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.2),
-                          backgroundImage:
-                              NetworkImage(widget.detailsUser.photoUrl))),
-                ),
+          body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(
+                  0, height * 0.05, 0, 0),
+              child: Hero(
+                tag: 'docPic',
+                child: FlatButton(
+                    shape: CircleBorder(),
+                    onPressed: () => Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => DoctorProfile(
+                                doctorDetails: widget.detailsUser))),
+                    child: CircleAvatar(
+                        backgroundColor: Colors.black.withOpacity(0.2),
+                        backgroundImage:
+                            NetworkImage(widget.detailsUser.photoUrl))),
               ),
-              Positioned(
-                top: 200,
-                left: 20,
-                child: editPanel
-                    ? Container(
-                        height: 35,
-                        child: WidgetAnimator(
-                          RawMaterialButton(
-                            shape: StadiumBorder(),
-                            fillColor: Colors.blue,
-                            child: Text(
-                              'Add More',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => AddDisease(
-                                            doctorName:
-                                                widget.detailsUser.userName,
-                                          )));
-                            },
+            ),
+            Positioned(
+              top: ScreenUtil.instance.setHeight(210),
+              left: ScreenUtil.instance.setWidth(20),
+              child: editPanel
+                  ? Container(
+                      height: ScreenUtil.instance.setHeight(35),
+                      child: WidgetAnimator(
+                        RawMaterialButton(
+                          shape: StadiumBorder(),
+                          fillColor: Colors.blue,
+                          child: Text(
+                            'Add More',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        ),
-                      )
-                    : Text(''),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 150, 0, 0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        height: 35,
-                        child: FloatingActionButton(
-                          heroTag: 'editBtn',
-                          tooltip: 'Edit Panel',
-                          backgroundColor:
-                              editPanel ? Colors.green : Colors.white,
-                          child: editPanel
-                              ? WidgetAnimator(
-                                  Icon(
-                                    Icons.done,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : WidgetAnimator(
-                                  Icon(
-                                    Icons.edit,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
                           onPressed: () {
-                            setState(() {
-                              editPanel = !editPanel;
-                            });
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => AddDisease(
+                                          doctorName:
+                                              widget.detailsUser.userName,
+                                        )));
                           },
                         ),
                       ),
-                      SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Doctor's",
-                        style: GoogleFonts.abel(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                    )
+                  : Text(''),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(ScreenUtil.instance.setWidth(20),
+                  ScreenUtil.instance.setHeight(155), 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    height: ScreenUtil.instance.setHeight(35),
+                    child: FloatingActionButton(
+                      heroTag: 'editBtn',
+                      tooltip: 'Edit Panel',
+                      backgroundColor: editPanel ? Colors.green : Colors.white,
+                      child: editPanel
+                          ? WidgetAnimator(
+                              Icon(
+                                Icons.done,
+                                size: ScreenUtil.instance.setHeight(25),
+                                color: Colors.white,
+                              ),
+                            )
+                          : WidgetAnimator(
+                              Icon(
+                                Icons.edit,
+                                color: Colors.black,
+                                size: ScreenUtil.instance.setHeight(25),
+                              ),
+                            ),
+                      onPressed: () {
+                        setState(() {
+                          editPanel = !editPanel;
+                        });
+                      },
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: ScreenUtil.instance.setWidth(4),
+                  ),
+                  Text(
+                    "Doctor's",
+                    style: GoogleFonts.abel(
+                        fontSize: ScreenUtil.instance.setSp(34),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              Positioned(
-                  top: 180,
-                  left: 110,
-                  child: Text(
-                    'Panel',
-                    style: TextStyle(fontSize: 18),
-                  )),
-              FutureBuilder(
-                future: getDiseaseInfo(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.black),
+            ),
+            Positioned(
+                top: ScreenUtil.instance.setHeight(190),
+                left: ScreenUtil.instance.setWidth(120),
+                child: Text(
+                  'Panel',
+                  style: TextStyle(fontSize: ScreenUtil.instance.setSp(20)),
+                )),
+            FutureBuilder(
+              future: getDiseaseInfo(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(
+                        0, height * 0.31, 0, 0),
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil.instance.setWidth(12),
+                          vertical: ScreenUtil.instance.setHeight(15)),
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.transparent,
                       ),
-                    );
-                  } else {
-                    return Container(
-                      margin: EdgeInsets.fromLTRB(0, 240, 0, 0),
-                      child: ListView.separated(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                        separatorBuilder: (context, index) => Divider(
-                          color: Colors.transparent,
-                        ),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return WidgetAnimator(CustomTile(
-                            delBtn: editPanel,
-                            snapshot: snapshot.data[index],
-                          ));
-                        },
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
-          )),
-    );
-  }
-
-  void _logOutAlertBox(context) {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text(
-            "Log Out",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          content: new Text("Are You Sure?"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new RaisedButton(
-              shape: StadiumBorder(),
-              color: Colors.white,
-              child: new Text(
-                "Close",
-                style: TextStyle(color: Colors.blue),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return WidgetAnimator(CustomTile(
+                          delBtn: editPanel,
+                          snapshot: snapshot.data[index],
+                        ));
+                      },
+                    ),
+                  );
+                }
               },
             ),
-            new RaisedButton(
-              shape: StadiumBorder(),
-              color: Colors.white,
-              child: new Text(
-                "Log Out",
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                _gSignIn.signOut();
-                int count = 0;
-                Navigator.of(context).popUntil((_) => count++ >= 3);
-              },
-            ),
+            Positioned(
+                top: ScreenUtil.instance.setWidth(50),
+                right: ScreenUtil.instance.setWidth(-20),
+                child: ShaderMask(
+                  shaderCallback: (rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[
+                        Colors.black.withOpacity(1.0),
+                        Colors.black.withOpacity(1.0),
+                        Colors.black.withOpacity(1.0),
+                        Colors.black.withOpacity(0.1),
+                      ],
+                    ).createShader(
+                        Rect.fromLTRB(0, 0, rect.width, rect.height));
+                  },
+                  blendMode: BlendMode.dstIn,
+                  child: Image(
+                      height: ScreenUtil.instance.setHeight(200),
+                      image: AssetImage('assets/bigDoc.png')),
+                )),
           ],
-        );
-      },
+        ),
+      )),
     );
   }
 }

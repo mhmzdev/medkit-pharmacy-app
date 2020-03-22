@@ -18,6 +18,8 @@ class AddDisease extends StatelessWidget {
       keyboardType: TextInputType.text,
       autofocus: false,
       controller: disNameTFController,
+      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -35,6 +37,8 @@ class AddDisease extends StatelessWidget {
       keyboardType: TextInputType.text,
       autofocus: false,
       controller: medNameTFController,
+      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -52,6 +56,8 @@ class AddDisease extends StatelessWidget {
       keyboardType: TextInputType.text,
       autofocus: false,
       controller: medTimeTFController,
+      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -138,70 +144,63 @@ class AddDisease extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.fromLTRB(10, 60, 10, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                      color: Colors.black,
-                    )),
-                SizedBox(height: 30),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Adding',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      'Disease',
-                      style: GoogleFonts.abel(fontSize: 30),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Enter the Following Information',
-                  style: GoogleFonts.abel(fontSize: 22),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                disNameTF,
-                SizedBox(
-                  height: 12,
-                ),
-                medNameTF,
-                SizedBox(
-                  height: 12,
-                ),
-                medTimeTF,
-                SizedBox(
-                  height: 12,
-                ),
-                medDescTF,
-                SizedBox(
-                  height: 15,
-                ),
-                addBtn,
-                SizedBox(
-                  height: 8,
-                ),
-              ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(10, 60, 10, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 30),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Adding',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        'Disease',
+                        style: GoogleFonts.abel(fontSize: 30),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Enter the Following Information',
+                    style: GoogleFonts.abel(fontSize: 22),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  disNameTF,
+                  SizedBox(
+                    height: 12,
+                  ),
+                  medNameTF,
+                  SizedBox(
+                    height: 12,
+                  ),
+                  medTimeTF,
+                  SizedBox(
+                    height: 12,
+                  ),
+                  medDescTF,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  addBtn,
+                  SizedBox(
+                    height: 8,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,26 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/otherWidgetsAndScreen/backBtn.dart';
 import 'package:medkit/patient/patientLogin.dart';
 
-
 class PatientProfile extends StatelessWidget {
   PatientDetails doctorDetails;
-
   PatientProfile({this.doctorDetails});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            BackBtn(),
-            SizedBox(height: MediaQuery.of(context).size.height/6,),
-            Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height/1.55,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              BackBtn(),
+              SizedBox(height: ScreenUtil.instance.setHeight(50),),
+              Center(
                 child: Column(
                   children: <Widget>[
                     Hero(
@@ -30,13 +28,13 @@ class PatientProfile extends StatelessWidget {
                         backgroundImage: NetworkImage(doctorDetails.photoUrl),
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: ScreenUtil.instance.setHeight(20),),
                     Text(
                       doctorDetails.userName,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                    ),SizedBox(height: 5,),
-                    Text(doctorDetails.userEmail, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),),
-                    SizedBox(height: 20,),
+                    ),SizedBox(height: ScreenUtil.instance.setHeight(5),),
+                    Text(doctorDetails.userEmail, style: TextStyle(fontSize: ScreenUtil.instance.setSp(15), fontWeight: FontWeight.w300),),
+                    SizedBox(height: ScreenUtil.instance.setHeight(20),),
                     RaisedButton.icon(
                         color: Colors.white,
                         onPressed: () {
@@ -50,7 +48,7 @@ class PatientProfile extends StatelessWidget {
                           'Log Out',
                           style: TextStyle(color: Colors.red),
                         )),
-                    SizedBox(height: MediaQuery.of(context).size.height/5.5,),
+                    SizedBox(height: ScreenUtil.instance.setHeight(210)),
                     Text(
                       'Version',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -59,8 +57,8 @@ class PatientProfile extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         )
     );
   }
@@ -74,17 +72,19 @@ class PatientProfile extends StatelessWidget {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)
+          ),
           title: new Text(
-            "Log Out",
+            "Are you Sure?",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: new Text("Are You Sure?"),
+          content: Text("You are about to Log Out!"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new RaisedButton(
-              shape: StadiumBorder(),
+            FlatButton(
               color: Colors.white,
-              child: new Text(
+              child: Text(
                 "Close",
                 style: TextStyle(color: Colors.blue),
               ),
@@ -92,10 +92,9 @@ class PatientProfile extends StatelessWidget {
                 Navigator.of(context).pop();
               },
             ),
-            new RaisedButton(
-              shape: StadiumBorder(),
+            FlatButton(
               color: Colors.white,
-              child: new Text(
+              child: Text(
                 "Log Out",
                 style: TextStyle(color: Colors.red),
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medkit/animations/topAnimation.dart';
+import 'package:medkit/animations/fadeAnimation.dart';
 
 class ImageAvatar extends StatelessWidget {
   final String assetImage;
@@ -8,29 +8,26 @@ class ImageAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: Opacity(
-        opacity: 0.25,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 30,
-              right: -100,
-              child: FadeAnimation(
-                1,
-                CircleAvatar(
-                  radius: 160,
-                  backgroundColor: Colors.black54,
-                  child: Image(
-                    image: AssetImage(assetImage),
-                  ),
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.05,
+          left: MediaQuery.of(context).size.width - 250,
+          child: Opacity(
+            opacity: 0.25,
+            child: FadeAnimation(
+              1,
+              CircleAvatar(
+                radius: 160,
+                backgroundColor: Colors.black54,
+                child: Image(
+                  image: AssetImage(assetImage),
                 ),
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
