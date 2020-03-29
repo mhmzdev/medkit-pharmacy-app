@@ -2,6 +2,13 @@
 
 It's a Pharmacy application that help you in curing basic symptoms or diseases with medicines available in your homes.
 
+## Problem
+It is very often that we have medicines in our homes and we don't know what they are about, or what disease or symptoms we can treat with it. So, we went to pharmacy and bought new ones. Which wasts our medicines, money and time as well.
+
+## Solution
+Medkit - will provide you basic information about varoious disease and information regarding some medicines along with their proper dose and time on which the medicines should be take on intial stages. If the medicine is not available then you can use "Search nearest Pharmacy" option to get to nearest phramacy via Google Maps application.
+It basically holds two panels: Doctor and Patient and each of them bears various functionalities.
+
 ## Features
 It holds two major parts
 1. Doctor
