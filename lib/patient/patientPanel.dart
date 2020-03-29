@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/animations/fadeAnimation.dart';
@@ -22,7 +21,6 @@ class PatientPanel extends StatefulWidget {
 }
 
 class _PatientPanelState extends State<PatientPanel> {
-  int listIndex;
 
   Future getDiseaseInfo() async {
     var firestore = Firestore.instance;
@@ -87,33 +85,19 @@ class _PatientPanelState extends State<PatientPanel> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SafeArea(
           child: Stack(
             children: <Widget>[
               Container(
+                width: width,
                 margin: EdgeInsets.fromLTRB(0, height * 0.03, 0, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => PatientProfile(
-                                    doctorDetails: widget.detailsUser,
-                                  ))),
-                      child: Hero(
-                        tag: 'patPic',
-                        child: CircleAvatar(
-                            backgroundColor: Colors.black.withOpacity(0.2),
-                            backgroundImage:
-                                NetworkImage(widget.detailsUser.photoUrl)),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.04,
-                    ),
+                    GestureDetector(onTap: () => Navigator.of(context).pop(true),
+                        child: Icon(Icons.arrow_back, size: height * 0.04,)),
+                    SizedBox(width: width * 0.02,),
                     Container(
                       width: width * 0.7,
                       height: height * 0.052,
@@ -133,33 +117,47 @@ class _PatientPanelState extends State<PatientPanel> {
                         ),
                       ),
                     ),
+                    SizedBox(width: width * 0.02,),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => PatientProfile(
+                                doctorDetails: widget.detailsUser,
+                              ))),
+                      child: Hero(
+                        tag: 'patPic',
+                        child: CircleAvatar(
+                            backgroundColor: Colors.black.withOpacity(0.2),
+                            backgroundImage:
+                            NetworkImage(widget.detailsUser.photoUrl)),
+                      ),
+                    ),
                   ],
                 ),
               ),
               Container(
                 height: height * 0.1,
-                width: width,
+                width: width * 0.35,
                   margin: EdgeInsets.fromLTRB(
-                      0, height * 0.15, 0, 0),
+                      width * 0.21, height * 0.15, 0, 0),
                   child: FadeAnimation(
                     0.3,
-                    Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Patient's",
-                            style: GoogleFonts.abel(
-                                fontSize: ScreenUtil.instance.setSp(33),
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '          Panel',
-                            style: TextStyle(
-                                fontSize: ScreenUtil.instance.setSp(20)),
-                          )
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          "Patient's",
+                          style: GoogleFonts.abel(
+                              fontSize: height * 0.04,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Panel',
+                          style: TextStyle(
+                              fontSize: height * 0.025),
+                        )
+                      ],
                     ),
                   )),
               FutureBuilder(
@@ -180,8 +178,8 @@ class _PatientPanelState extends State<PatientPanel> {
                           0, height * 0.32, 0, 0),
                       child: ListView.separated(
                         padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil.instance.setWidth(10),
-                            vertical: ScreenUtil.instance.setWidth(10)),
+                            horizontal: 10,
+                            vertical: 10),
                         separatorBuilder: (context, index) => Divider(
                           color: Colors.transparent,
                         ),
@@ -200,8 +198,8 @@ class _PatientPanelState extends State<PatientPanel> {
                 },
               ),
               Positioned(
-                  top: ScreenUtil.instance.setWidth(70),
-                  right: ScreenUtil.instance.setWidth(-20),
+                  top: height * 0.087,
+                  left: width - 180,
                   child: ShaderMask(
                     shaderCallback: (rect) {
                       return LinearGradient(
@@ -218,7 +216,7 @@ class _PatientPanelState extends State<PatientPanel> {
                     },
                     blendMode: BlendMode.dstIn,
                     child: Image(
-                        height: ScreenUtil.instance.setHeight(200),
+                        height: height * 0.24,
                         image: AssetImage('assets/bigPat.png')),
                   )),
             ],

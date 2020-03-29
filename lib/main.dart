@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:medkit/doctor/addDisease.dart';
 import 'package:medkit/doctor/doctorLogin.dart';
 import 'package:medkit/otherWidgetsAndScreen/aboutUs.dart';
-import 'package:medkit/otherWidgetsAndScreen/userType.dart';
+import 'package:medkit/otherWidgetsAndScreen/category.dart';
 import 'package:medkit/patient/patientLogin.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -27,11 +27,9 @@ class MedKitApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: WelcomeScreen(),
       routes: {
-        'UserType': (context) => UserType(),
-        'DoctorLogin' : (context) => DoctorLogin(),
-        'AddDisease' : (context) => AddDisease(),
-        'PatientLogin' : (context) => PatientLogin(),
-        'AboutUs' : (context) => AboutUs()
+        '/DoctorLogin' : (context) => DoctorLogin(),
+        '/PatientLogin' : (context) => PatientLogin(),
+        '/AboutUs' : (context) => AboutUs()
       },
     );
   }
@@ -102,7 +100,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           Navigator.push(context,
-              PageTransition(type: PageTransitionType.fade, child: UserType()));
+              PageTransition(type: PageTransitionType.fade, child: Category()));
         }
       });
   }
@@ -121,16 +119,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         width: width,
         child: Stack(
           children: <Widget>[
-            Container(
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 40),
-              child: FadeAnimation(
-                  1,
-                  Text(
-                    'Proceed!',
-                    style: GoogleFonts.openSans(fontSize: 20),
-                  )),
-            ),
             Positioned(
               top: height * 0.05,
               left: width - 240,
@@ -142,95 +130,109 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 ),
               ),
             ),
-            Container(
-              width: width,
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FadeAnimation(
-                      1,
-                      Text(
-                        'MEDKIT',
-                        style: TextStyle(color: Colors.black, fontSize: 40),
-                      )),
-                  FadeAnimation(
-                      1,
-                      Text(
-                        "Pharmacy in Your Hands!",
-                        style: TextStyle(
-                            color: Colors.black.withOpacity(0.5), fontSize: 14),
-                      )),
-                  SizedBox(
-                    height: 180,
-                  ),
-                  FadeAnimation(
-                      1.6,
-                      AnimatedBuilder(
-                        animation: _scaleController,
-                        builder: (context, child) => Transform.scale(
-                          scale: _scaleAnimation.value,
-                          child: Center(
-                            child: AnimatedBuilder(
-                              animation: _widthController,
-                              builder: (context, child) => Container(
-                                width: _widthAnimation.value,
-                                height: 80,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.black.withOpacity(0.4),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    _scaleController.forward();
-                                  },
-                                  child: Stack(
-                                    children: <Widget>[
-                                      AnimatedBuilder(
-                                        animation: _positionController,
-                                        builder: (context, child) => Positioned(
-                                          left: _positionAnimation.value,
-                                          child: AnimatedBuilder(
-                                            animation: _scaleController2,
-                                            builder: (context, child) =>
-                                                Transform.scale(
-                                                    scale: _scale2Animation
-                                                        .value,
-                                                    child: Container(
-                                                        width: 60,
-                                                        height: 60,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color:
-                                                                    Colors
-                                                                        .black,
-                                                                shape: BoxShape
-                                                                    .circle),
-                                                        child: hideIcon == false
-                                                            ? Icon(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, height * 0.01),
+                height: height * 0.55,
+                width: width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FadeAnimation(
+                        1,
+                        Text(
+                          'MEDKIT',
+                          style: TextStyle(color: Colors.black, fontSize: height * 0.06),
+                        )),
+                    FadeAnimation(
+                        1,
+                        Text(
+                          "Pharmacy in Your Hands!",
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.5), fontSize: height * 0.017),
+                        )),
+                    SizedBox(
+                      height: height * 0.26,
+                    ),
+                    Column(
+                      children: <Widget>[
+                        FadeAnimation(
+                            1.6,
+                            AnimatedBuilder(
+                              animation: _scaleController,
+                              builder: (context, child) => Transform.scale(
+                                scale: _scaleAnimation.value,
+                                child: Center(
+                                  child: AnimatedBuilder(
+                                    animation: _widthController,
+                                    builder: (context, child) => Container(
+                                      width: _widthAnimation.value,
+                                      height: 80,
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.black.withOpacity(0.4),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _scaleController.forward();
+                                        },
+                                        child: Stack(
+                                          children: <Widget>[
+                                            AnimatedBuilder(
+                                              animation: _positionController,
+                                              builder: (context, child) => Positioned(
+                                                left: _positionAnimation.value,
+                                                child: AnimatedBuilder(
+                                                  animation: _scaleController2,
+                                                  builder: (context, child) =>
+                                                      Transform.scale(
+                                                          scale: _scale2Animation
+                                                              .value,
+                                                          child: Container(
+                                                              width: 60,
+                                                              height: 60,
+                                                              decoration:
+                                                              BoxDecoration(
+                                                                  color:
+                                                                  Colors
+                                                                      .black,
+                                                                  shape: BoxShape
+                                                                      .circle),
+                                                              child: hideIcon == false
+                                                                  ? Icon(
                                                                 Icons
                                                                     .arrow_forward,
                                                                 color: Colors
                                                                     .white,
                                                               )
-                                                            : Container())),
-                                          ),
+                                                                  : Container())),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      )),
-                  SizedBox(
-                    height: 60,
-                  ),
-                ],
+                            )),
+                        SizedBox(height: height * 0.02,),
+                        FadeAnimation(
+                            1,
+                            Text(
+                              'Proceed!', textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(fontSize: 20),
+                            )),
+                      ],
+                    ),
+                    SizedBox(height: height * 0.02,)
+                  ],
+                ),
               ),
             )
           ],

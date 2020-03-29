@@ -27,6 +27,8 @@ class _CustomTileState extends State<CustomTile> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -39,7 +41,7 @@ class _CustomTileState extends State<CustomTile> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        height: 80,
+        height: height * 0.1,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           gradient: new LinearGradient(colors: [
@@ -54,34 +56,31 @@ class _CustomTileState extends State<CustomTile> {
           children: <Widget>[
             Text(
               widget.snapshot.data['disName'],
-              style: GoogleFonts.lato(fontSize: 25, letterSpacing: 2),
+              style: GoogleFonts.lato(fontSize: height * 0.03, letterSpacing: 2),
             ),
-            Container(
-              height: 35,
-              child: FlatButton(
-                onPressed: () {
-                  widget.delBtn
-                      ? _deleteDisease(context)
-                      : Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) =>
-                              MedDetails(
-                                snapshot: widget.snapshot,
-                              )));
-                },
-                shape: StadiumBorder(),
-                child: widget.delBtn
-                    ? Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                  size: 30,
-                )
-                    : Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.black,
-                  size: 20,
-                ),
+            FlatButton(
+              onPressed: () {
+                widget.delBtn
+                    ? _deleteDisease(context)
+                    : Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) =>
+                            MedDetails(
+                              snapshot: widget.snapshot,
+                            )));
+              },
+              shape: CircleBorder(),
+              child: widget.delBtn
+                  ? Icon(
+                Icons.delete,
+                color: Colors.red,
+                size: height * 0.032,
+              )
+                  : Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.black54,
+                size: height * 0.032,
               ),
             )
           ],
@@ -96,7 +95,7 @@ class DeletingWait extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pop(context);
-      Toast.show("Deleted Successfully!", context, backgroundColor: Colors.red, duration: Toast.LENGTH_LONG);
+      Toast.show("Deleted Successfully!", context, backgroundRadius: 5, backgroundColor: Colors.red, duration: 3);
     });
     return Scaffold(
       body: SafeArea(

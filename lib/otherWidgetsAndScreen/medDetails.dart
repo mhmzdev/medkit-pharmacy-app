@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkit/animations/bottomAnimation.dart';
-import 'package:toast/toast.dart';
+import 'package:medkit/otherWidgetsAndScreen/doctorAbout.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart';
-
-import 'backBtn.dart';
+import 'backBtnAndImage.dart';
 
 class MapUtils {
   MapUtils._();
@@ -49,168 +47,193 @@ class _MedDetailsState extends State<MedDetails> {
             Align(
               alignment: Alignment.topRight,
               child: Container(
-                margin: EdgeInsets.only(top: height * 0.025),
-                width: width * 0.72,
+                margin: EdgeInsets.only(top: height * 0.02),
+                width: width * 0.75,
                 child: Opacity(
                     opacity: 0.3,
-                    child: WidgetAnimator(Row(
+                    child: Row(
                       children: <Widget>[
-                        Image(image: AssetImage('assets/pill.png')),
-                        Image(image: AssetImage('assets/syrup.png')),
-                        Image(image: AssetImage('assets/injection.png')),
-                        Image(image: AssetImage('assets/tablets.png'))
+                        Image(
+                          image: AssetImage('assets/pill.png'),
+                          height: height * 0.1,
+                        ),
+                        Image(
+                          image: AssetImage('assets/syrup.png'),
+                          height: height * 0.1,
+                        ),
+                        Image(
+                          image: AssetImage('assets/tablets.png'),
+                          height: height * 0.07,
+                        ),
+                        Image(
+                          image: AssetImage('assets/injection.png'),
+                          height: height * 0.07,
+                        )
                       ],
-                    ))),
+                    )),
               ),
             ),
-            BackBtn(),
-            Container(
-                width: width,
-                height: height,
-                margin: EdgeInsets.fromLTRB(
-                    width * 0.025, height * 0.17, width * 0.025, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    WidgetAnimator(
-                      Text(
-                        widget.snapshot.data['disName'],
-                        style: GoogleFonts.abel(
-                            fontSize: ScreenUtil.instance.setSp(50)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                BackBtn(),
+                Container(
+                    width: width,
+                    margin:
+                        EdgeInsets.fromLTRB(width * 0.025, 0, width * 0.025, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          'Posted by: ',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        Text(
-                          'Dr. ' + widget.snapshot.data['post'],
-                          style: TextStyle(
-                              color: Colors.grey, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.instance.setHeight(10),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Medicine: ',
-                          style: TextStyle(
-                              fontSize: ScreenUtil.instance.setSp(25)),
-                        ),
-                        WidgetAnimator(
-                          Text(
-                            widget.snapshot.data['medName'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: ScreenUtil.instance.setSp(25)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.instance.setHeight(12),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Dose: ',
-                          style: TextStyle(
-                              fontSize: ScreenUtil.instance.setSp(25)),
-                        ),
-                        WidgetAnimator(
-                          Text(
-                            widget.snapshot.data['medTime'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: ScreenUtil.instance.setSp(25)),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.instance.setHeight(12),
-                    ),
-                    Container(
-                      width: width,
-                      height: height * 0.3,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: ListView(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil.instance.setWidth(5.0)),
-                        children: <Widget>[
-                          WidgetAnimator(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
                             Text(
-                              widget.snapshot.data['medDesc'],
+                              widget.snapshot.data['disName'],
+                              style: GoogleFonts.abel(fontSize: height * 0.06),
+                            ),
+                            RaisedButton(
+                              color: Colors.blue,
+                              shape: CircleBorder(),
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAbout(
+                                  docEmail: widget.snapshot.data['docEmail'],
+                                  docName: widget.snapshot.data['post'],
+                                )));
+                              },
+                              child: Icon(Icons.info, color: Colors.white, size: height * 0.05,),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Posted by: ',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              'Dr. ' + widget.snapshot.data['post'],
                               style: TextStyle(
-                                  height: 1.5,
-                                  fontSize: ScreenUtil.instance.setSp(17)),
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Medicine: ',
+                              style: TextStyle(fontSize: height * 0.03),
+                            ),
+                            WidgetAnimator(
+                              Text(
+                                widget.snapshot.data['medName'],
+                                style: GoogleFonts.averageSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: height * 0.03),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Dose: ',
+                              style: TextStyle(fontSize: height * 0.03),
+                            ),
+                            WidgetAnimator(
+                              Text(
+                                widget.snapshot.data['medTime'],
+                                style: GoogleFonts.averageSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: height * 0.03),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          width: width,
+                          height: height * 0.3,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: ListView(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            children: <Widget>[
+                              Text(
+                                widget.snapshot.data['medDesc'],
+                                style: TextStyle(height: 1.5, fontSize: 17),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        WidgetAnimator(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.warning,
+                                size: height * 0.02,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                width: width * 0.02,
+                              ),
+                              Text(
+                                'See a Doctor if condition gets Worse!',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, height * 0.01, 0, 0),
+                          child: SizedBox(
+                            width: width,
+                            height: height * 0.075,
+                            child: RaisedButton(
+                              color: Colors.white,
+                              shape: StadiumBorder(),
+                              onPressed: () {
+                                MapUtils.openMap('Pharmacy near me');
+                              },
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    WidgetAnimator(Image.asset(
+                                      'assets/mapicon.png',
+                                      height: height * 0.045,
+                                    )),
+                                    SizedBox(width: width * 0.01),
+                                    Text(
+                                      'Search Nearest Pharmacy',
+                                      style: TextStyle(
+                                          letterSpacing: 2,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: height * 0.021),
+                                    )
+                                  ]),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.05,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.warning, size: height * 0.02, color: Colors.red,),
-                        SizedBox(width:  width * 0.02,),
-                        Text(
-                          'See a Doctor if condition gets Worse!',
-                          style: TextStyle(color: Colors.red),
                         ),
                       ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                          0, ScreenUtil.instance.setHeight(10), 0, 0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: RaisedButton(
-                          padding: EdgeInsets.symmetric(
-                              vertical: ScreenUtil.instance.setWidth(10),
-                              horizontal: ScreenUtil.instance.setHeight(15)),
-                          color: Colors.white,
-                          shape: StadiumBorder(),
-                          onPressed: () {
-                            MapUtils.openMap('Pharmacy near me');
-                          },
-                          child: WidgetAnimator(
-                            Row(
-                              children: <Widget>[
-                                CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage:
-                                      AssetImage('assets/mapicon.png'),
-                                ),
-                                SizedBox(width: ScreenUtil.instance.setWidth(5)),
-                                Text(
-                                  'Search Nearest Pharmacy',
-                                  style: TextStyle(
-                                      letterSpacing: 2,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: ScreenUtil.instance.setSp(18)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+                    )),
+              ],
+            )
           ],
         ),
       ),

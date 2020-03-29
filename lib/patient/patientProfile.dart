@@ -1,40 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:medkit/otherWidgetsAndScreen/backBtn.dart';
+import 'package:medkit/otherWidgetsAndScreen/backBtnAndImage.dart';
 import 'package:medkit/patient/patientLogin.dart';
 
 class PatientProfile extends StatelessWidget {
-  PatientDetails doctorDetails;
+  final PatientDetails doctorDetails;
   PatientProfile({this.doctorDetails});
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               BackBtn(),
-              SizedBox(height: ScreenUtil.instance.setHeight(50),),
+              SizedBox(height: height * 0.05,),
               Center(
                 child: Column(
                   children: <Widget>[
                     Hero(
                       tag: 'patPic',
                       child: CircleAvatar(
-                        radius: 80,
+                        radius: height * 0.1,
                         backgroundImage: NetworkImage(doctorDetails.photoUrl),
                       ),
                     ),
-                    SizedBox(height: ScreenUtil.instance.setHeight(20),),
+                    SizedBox(height: height * 0.03,),
                     Text(
                       doctorDetails.userName,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                    ),SizedBox(height: ScreenUtil.instance.setHeight(5),),
-                    Text(doctorDetails.userEmail, style: TextStyle(fontSize: ScreenUtil.instance.setSp(15), fontWeight: FontWeight.w300),),
-                    SizedBox(height: ScreenUtil.instance.setHeight(20),),
+                    ),SizedBox(height: height * 0.007),
+                    Text(doctorDetails.userEmail, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),),
+                    SizedBox(height: height * 0.02,),
                     RaisedButton.icon(
                         color: Colors.white,
                         onPressed: () {
@@ -43,17 +45,18 @@ class PatientProfile extends StatelessWidget {
                         icon: Icon(
                           Icons.exit_to_app,
                           color: Colors.red,
+                          size: height * 0.03,
                         ),
                         label: Text(
                           'Log Out',
                           style: TextStyle(color: Colors.red),
                         )),
-                    SizedBox(height: ScreenUtil.instance.setHeight(210)),
+                    SizedBox(height: height * 0.28),
                     Text(
                       'Version',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('v 0.1'), SizedBox(height: 10,)
+                    Text('v 0.1')
                   ],
                 ),
               ),

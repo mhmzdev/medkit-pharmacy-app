@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/doctor/addDisease.dart';
@@ -93,91 +92,101 @@ class _DoctorPanelState extends State<DoctorPanel> {
                             builder: (context) => DoctorProfile(
                                 doctorDetails: widget.detailsUser))),
                     child: CircleAvatar(
+                        maxRadius: height * 0.03,
                         backgroundColor: Colors.black.withOpacity(0.2),
                         backgroundImage:
                             NetworkImage(widget.detailsUser.photoUrl))),
               ),
             ),
-            Positioned(
-              top: ScreenUtil.instance.setHeight(210),
-              left: ScreenUtil.instance.setWidth(20),
-              child: editPanel
-                  ? Container(
-                      height: ScreenUtil.instance.setHeight(35),
-                      child: WidgetAnimator(
-                        RawMaterialButton(
-                          shape: StadiumBorder(),
-                          fillColor: Colors.blue,
-                          child: Text(
-                            'Add More',
-                            style: TextStyle(color: Colors.white),
-                          ),
+            Container(
+              width: width,
+              height: height * 0.25,
+              margin: EdgeInsets.fromLTRB(width * 0.03, height * 0.1, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: height * 0.05,
+                        child: FloatingActionButton(
+                          heroTag: 'editBtn',
+                          tooltip: 'Edit Panel',
+                          backgroundColor: editPanel ? Colors.green : Colors.white,
+                          child: editPanel
+                              ? WidgetAnimator(
+                                  Icon(
+                                    Icons.done,
+                                    size: height * 0.03,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : WidgetAnimator(
+                                  Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                    size: height * 0.03,
+                                  ),
+                                ),
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => AddDisease(
-                                          doctorName:
-                                              widget.detailsUser.userName,
-                                        )));
+                            setState(() {
+                              editPanel = !editPanel;
+                            });
                           },
                         ),
                       ),
-                    )
-                  : Text(''),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(ScreenUtil.instance.setWidth(20),
-                  ScreenUtil.instance.setHeight(155), 0, 0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: ScreenUtil.instance.setHeight(35),
-                    child: FloatingActionButton(
-                      heroTag: 'editBtn',
-                      tooltip: 'Edit Panel',
-                      backgroundColor: editPanel ? Colors.green : Colors.white,
-                      child: editPanel
-                          ? WidgetAnimator(
-                              Icon(
-                                Icons.done,
-                                size: ScreenUtil.instance.setHeight(25),
-                                color: Colors.white,
-                              ),
-                            )
-                          : WidgetAnimator(
-                              Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                                size: ScreenUtil.instance.setHeight(25),
-                              ),
+                      SizedBox(height: height * 0.01,),
+                      editPanel
+                          ? Container(
+                        height: height * 0.045,
+                        child: WidgetAnimator(
+                          RawMaterialButton(
+                            shape: StadiumBorder(),
+                            fillColor: Colors.blue,
+                            child: Text(
+                              'Add More',
+                              style: TextStyle(color: Colors.white),
                             ),
-                      onPressed: () {
-                        setState(() {
-                          editPanel = !editPanel;
-                        });
-                      },
-                    ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => AddDisease(
+                                        doctorName:
+                                        widget.detailsUser.userName,
+                                        doctorEmail: widget.detailsUser.userEmail,
+                                      )));
+                            },
+                          ),
+                        ),
+                      )
+                          : SizedBox(width: width * 0.245),
+                    ],
                   ),
                   SizedBox(
-                    width: ScreenUtil.instance.setWidth(4),
+                    width: width * 0.02,
                   ),
-                  Text(
-                    "Doctor's",
-                    style: GoogleFonts.abel(
-                        fontSize: ScreenUtil.instance.setSp(34),
-                        fontWeight: FontWeight.bold),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        "Doctor's",
+                        style: GoogleFonts.abel(
+                            fontSize: height * 0.042,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Panel',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            Positioned(
-                top: ScreenUtil.instance.setHeight(190),
-                left: ScreenUtil.instance.setWidth(120),
-                child: Text(
-                  'Panel',
-                  style: TextStyle(fontSize: ScreenUtil.instance.setSp(20)),
-                )),
             FutureBuilder(
               future: getDiseaseInfo(),
               builder: (context, snapshot) {
@@ -191,11 +200,10 @@ class _DoctorPanelState extends State<DoctorPanel> {
                 } else {
                   return Container(
                     margin: EdgeInsets.fromLTRB(
-                        0, height * 0.31, 0, 0),
+                        0, height * 0.325, 0, 0),
                     child: ListView.separated(
                       padding: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil.instance.setWidth(12),
-                          vertical: ScreenUtil.instance.setHeight(15)),
+                          horizontal: 12),
                       separatorBuilder: (context, index) => Divider(
                         color: Colors.transparent,
                       ),
@@ -212,8 +220,8 @@ class _DoctorPanelState extends State<DoctorPanel> {
               },
             ),
             Positioned(
-                top: ScreenUtil.instance.setWidth(50),
-                right: ScreenUtil.instance.setWidth(-20),
+                top: height * 0.05,
+                left: width - 180,
                 child: ShaderMask(
                   shaderCallback: (rect) {
                     return LinearGradient(
@@ -230,7 +238,7 @@ class _DoctorPanelState extends State<DoctorPanel> {
                   },
                   blendMode: BlendMode.dstIn,
                   child: Image(
-                      height: ScreenUtil.instance.setHeight(200),
+                      height: height * 0.265,
                       image: AssetImage('assets/bigDoc.png')),
                 )),
           ],

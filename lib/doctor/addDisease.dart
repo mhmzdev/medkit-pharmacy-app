@@ -1,31 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medkit/animations/bottomAnimation.dart';
+import 'package:medkit/otherWidgetsAndScreen/backBtnAndImage.dart';
 import 'package:toast/toast.dart';
 
-class AddDisease extends StatelessWidget {
+
+final controllerDisName = TextEditingController();
+final controllerMedName = TextEditingController();
+final controllerMedDose = TextEditingController();
+final controllerDesc = TextEditingController();
+
+class AddDisease extends StatefulWidget {
   final String doctorName;
-  AddDisease({this.doctorName});
+  final String doctorEmail;
+  AddDisease({this.doctorName, this.doctorEmail});
+
+  @override
+  _AddDiseaseState createState() => _AddDiseaseState();
+}
+
+class _AddDiseaseState extends State<AddDisease> {
+  bool validDisName = false;
+  bool validMedName = false;
+  bool validMedDose = false;
+  bool validDesc = false;
 
   @override
   Widget build(BuildContext context) {
-    final disNameTFController = TextEditingController();
-    final medNameTFController = TextEditingController();
-    final medTimeTFController = TextEditingController();
-    final medDescTFController = TextEditingController();
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     final disNameTF = TextField(
       keyboardType: TextInputType.text,
       autofocus: false,
-      controller: disNameTFController,
+      controller: controllerDisName,
       onSubmitted: (_) => FocusScope.of(context).nextFocus(),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
-            child: Image(
-              image: AssetImage('assets/injection.png'),
-              height: 30,
+            child: WidgetAnimator(
+              Image(
+                image: AssetImage('assets/injection.png'),
+                height: height * 0.04
+              ),
             ),
           ),
           labelText: 'Disease Name',
@@ -36,15 +55,17 @@ class AddDisease extends StatelessWidget {
     final medNameTF = TextField(
       keyboardType: TextInputType.text,
       autofocus: false,
-      controller: medNameTFController,
+      controller: controllerMedName,
       onSubmitted: (_) => FocusScope.of(context).nextFocus(),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
-            child: Image(
-              image: AssetImage('assets/tablets.png'),
-              height: 30,
+            child: WidgetAnimator(
+              Image(
+                image: AssetImage('assets/tablets.png'),
+                height: height * 0.04,
+              ),
             ),
           ),
           labelText: 'Medicine Name',
@@ -55,15 +76,17 @@ class AddDisease extends StatelessWidget {
     final medTimeTF = TextField(
       keyboardType: TextInputType.text,
       autofocus: false,
-      controller: medTimeTFController,
+      controller: controllerMedDose,
       onSubmitted: (_) => FocusScope.of(context).nextFocus(),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
-            child: Image(
-              image: AssetImage('assets/pill.png'),
-              height: 30,
+            child: WidgetAnimator(
+              Image(
+                image: AssetImage('assets/pill.png'),
+                height: height * 0.04,
+              ),
             ),
           ),
           labelText: 'Medicine Dose',
@@ -74,14 +97,16 @@ class AddDisease extends StatelessWidget {
     final medDescTF = TextField(
       keyboardType: TextInputType.multiline,
       autofocus: false,
-      controller: medDescTFController,
+      controller: controllerDesc,
       maxLines: null,
       decoration: InputDecoration(
           prefixIcon: CircleAvatar(
             backgroundColor: Colors.transparent,
-            child: Image(
-              image: AssetImage('assets/steth.png'),
-              height: 30,
+            child: WidgetAnimator(
+              Image(
+                image: AssetImage('assets/steth.png'),
+                height: height * 0.04,
+              ),
             ),
           ),
           labelText: 'Description',
@@ -91,10 +116,28 @@ class AddDisease extends StatelessWidget {
     );
 
     controllerClear() {
-      disNameTFController.clear();
-      medNameTFController.clear();
-      medTimeTFController.clear();
-      medDescTFController.clear();
+      controllerDisName.clear();
+      controllerMedName.clear();
+      controllerMedDose.clear();
+      controllerDesc.clear();
+    }
+
+    addingDisease () {
+      Firestore.instance
+          .collection('Diseases')
+          .document(controllerDisName.text)
+          .setData({
+        'disName': controllerDisName.text,
+        'medName': controllerMedName.text,
+        'medTime': controllerMedDose.text,
+        'medDesc': controllerDesc.text,
+        'post' : widget.doctorName,
+        'docEmail' : widget.doctorEmail
+      });
+      controllerClear();
+      Toast.show('Added Successfully!', context,
+         backgroundRadius: 5, backgroundColor: Colors.blue, duration: 3);
+      Navigator.pop(context);
     }
 
     final addBtn = Container(
@@ -102,30 +145,14 @@ class AddDisease extends StatelessWidget {
         height: 50,
         child: RaisedButton(
           onPressed: () {
-            if (disNameTFController.text != '' &&
-                medNameTFController.text != '' &&
-                medTimeTFController.text != '' &&
-                medDescTFController.text != '') {
-              Firestore.instance
-                  .collection('Diseases')
-                  .document(disNameTFController.text)
-                  .setData({
-                'disName': disNameTFController.text,
-                'medName': medNameTFController.text,
-                'medTime': medTimeTFController.text,
-                'medDesc': medDescTFController.text,
-                'post' : doctorName,
+              setState(() {
+                controllerDisName.text.isEmpty ? validDisName = true : validDisName = false;
+                controllerMedName.text.isEmpty ? validMedName = true : validMedName = false;
+                controllerMedDose.text.isEmpty ? validMedDose = true : validMedDose = false;
+                controllerDesc.text.isEmpty ? validDesc = true : validDesc = false;
               });
-              controllerClear();
-              Toast.show('Added Successfully!', context,
-                  backgroundColor: Colors.blue, duration: Toast.LENGTH_LONG);
-              Navigator.pop(context);
-            } else {
-              Toast.show('Empty Field Found!', context,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  gravity: Toast.CENTER);
-            }
+              !validDisName & !validMedName & !validMedDose & !validDesc ? addingDisease() :
+              Toast.show("Empty Field(s) Found!", context, backgroundColor: Colors.red, backgroundRadius: 5, duration: 2);
           },
           color: Colors.white,
           shape: StadiumBorder(),
@@ -147,57 +174,58 @@ class AddDisease extends StatelessWidget {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.fromLTRB(10, 60, 10, 0),
+              width: width,
+              margin: EdgeInsets.fromLTRB(width * 0.025, 0, width * 0.025, 0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 30),
+                  BackBtn(),
+                  SizedBox(height: height * 0.05),
                   Row(
                     children: <Widget>[
                       Text(
                         'Adding',
                         style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: height * 0.04),
                       ),
                       SizedBox(
-                        width: 8,
+                        width: height * 0.015
                       ),
                       Text(
                         'Disease',
-                        style: GoogleFonts.abel(fontSize: 30),
+                        style: GoogleFonts.abel(fontSize: height * 0.04)
                       )
                     ],
                   ),
                   SizedBox(
-                    height: 20,
+                    height: height * 0.02,
                   ),
                   Text(
                     'Enter the Following Information',
-                    style: GoogleFonts.abel(fontSize: 22),
+                    style: GoogleFonts.abel(fontSize: height * 0.025),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: height * 0.02,
                   ),
                   disNameTF,
                   SizedBox(
-                    height: 12,
+                    height: height * 0.015,
                   ),
                   medNameTF,
                   SizedBox(
-                    height: 12,
+                    height: height * 0.015,
                   ),
                   medTimeTF,
                   SizedBox(
-                    height: 12,
+                    height: height * 0.015,
                   ),
                   medDescTF,
                   SizedBox(
-                    height: 15,
+                    height: height * 0.02,
                   ),
                   addBtn,
                   SizedBox(
-                    height: 8,
+                    height: height * 0.01,
                   ),
                 ],
               ),

@@ -1,17 +1,13 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medkit/animations/fadeAnimation.dart';
 import 'package:medkit/animations/bottomAnimation.dart';
 import 'package:medkit/doctor/doctorPanel.dart';
-import 'package:medkit/otherWidgetsAndScreen/backBtn.dart';
-import 'package:medkit/otherWidgetsAndScreen/imageAvatar.dart';
+import 'package:medkit/otherWidgetsAndScreen/backBtnAndImage.dart';
 import 'package:toast/toast.dart';
 
 class DoctorLogin extends StatefulWidget {
@@ -19,7 +15,17 @@ class DoctorLogin extends StatefulWidget {
   _DoctorLoginState createState() => _DoctorLoginState();
 }
 
+final _controllerName = TextEditingController();
+final _controllerPhone = TextEditingController();
+final _controllerCNIC = TextEditingController();
+
 class _DoctorLoginState extends State<DoctorLogin> {
+
+  //bool validatePhoneVar = false;
+  bool validateCNICVar = false;
+  bool validateName = false;
+
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
@@ -58,65 +64,79 @@ class _DoctorLoginState extends State<DoctorLogin> {
     return userDetails;
   }
 
+  controllerClear(){
+    _controllerName.clear();
+    _controllerPhone.clear();
+    _controllerCNIC.clear();
+  }
+
+  validatePhone (String phone) {
+    if(!(phone.length == 11) && phone.isNotEmpty){
+      return "Invalid Phone Number length";
+    }
+    return null;
+  }
+
+  validateCNIC(String idNumber) {
+    if(!(idNumber.length == 13) && idNumber.isNotEmpty) {
+      return "CNIC must be of 13-Digits";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
-    final nameTextFieldController = TextEditingController();
     final nameTextField = TextField(
       keyboardType: TextInputType.text,
       autofocus: false,
       maxLength: 30,
       textInputAction: TextInputAction.next,
       onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-      controller: nameTextFieldController,
+      controller: _controllerName,
       decoration: InputDecoration(
           fillColor: Colors.black.withOpacity(0.07),
           filled: true,
           labelText: 'Enter Name',
-          prefixIcon: Icon(Icons.person),
+          prefixIcon: WidgetAnimator(Icon(Icons.person)),
           border: OutlineInputBorder(
               borderRadius: const BorderRadius.all(const Radius.circular(20)))),
     );
 
-    final phNumberTextController = TextEditingController();
-    final phoneTextField = TextField(
-      keyboardType: TextInputType.phone,
-      autofocus: false,
-      maxLength: 11,
-      controller: phNumberTextController,
-      textInputAction: TextInputAction.next,
-      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.black.withOpacity(0.07),
-        labelText: 'Enter Number',
-        prefixIcon: Icon(Icons.phone),
-        border: new OutlineInputBorder(
-          borderRadius: const BorderRadius.all(const Radius.circular(20)),
-        ),
-      ),
-    );
-
-    final cnicTextController = TextEditingController();
-    final cnicTextField = TextFormField(
+    final cnicTextField = TextField(
       keyboardType: TextInputType.number,
       autofocus: false,
       maxLength: 13,
-      controller: cnicTextController,
+      controller: _controllerCNIC,
+      onSubmitted: (_) => FocusScope.of(context).unfocus(),
       decoration: InputDecoration(
           filled: true,
+          errorText: validateCNIC(_controllerCNIC.text),
           fillColor: Colors.black.withOpacity(0.07),
-          labelText: 'Enter CNIC',
-          prefixIcon: Icon(Icons.card_membership),
+          labelText: 'NIC Number',
+          prefixIcon: WidgetAnimator(Icon(Icons.credit_card)),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))),
     );
 
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
+    getInfoAndLogin() {
+      Firestore.instance
+          .collection('doctorInfo')
+          .document(_controllerName.text)
+          .setData({
+        'cnic': _controllerCNIC.text,
+      });
+      _signIn(context)
+          .then((FirebaseUser user) =>
+          print('Gmail Logged In'))
+          .catchError((e) => print(e));
+      controllerClear();
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
-
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -124,98 +144,98 @@ class _DoctorLoginState extends State<DoctorLogin> {
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           body: SafeArea(
-            child: Stack(
-              children: <Widget>[
-                ImageAvatar(
-                  assetImage: 'assets/bigDoc.png',
-                ),
-                Container(
-                  width: width,
-                  height: height,
-                  margin: EdgeInsets.fromLTRB(width * 0.03, 0, width * 0.03, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      BackBtn(),
-                      SizedBox(height: height * 0.05,),
-                      Text(
-                        "\t\tLogin",
-                        style: GoogleFonts.abel(
-                            fontSize: ScreenUtil.instance.setSp(35),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: height * 0.05,
-                      ),
-                      WidgetAnimator(nameTextField),
-                      WidgetAnimator(phoneTextField),
-                      WidgetAnimator(cnicTextField),
-                      SizedBox(height: height * 0.01,),
-                      FadeAnimation(
-                        1.5,
+            child: Container(
+              width: width,
+              height: height,
+              child: Stack(
+                children: <Widget>[
+                  BackBtn(),
+                  ImageAvatar(
+                    assetImage: 'assets/bigDoc.png',
+                  ),
+                  Container(
+                    width: width,
+                    height: height,
+                    margin:
+                        EdgeInsets.fromLTRB(width * 0.03, 0, width * 0.03, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        SizedBox(
+                          height: height * 0.05,
+                        ),
+                        Text(
+                          "\t\tLogin",
+                          style: GoogleFonts.abel(
+                              fontSize: height * 0.044,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: height * 0.05,
+                        ),
+                        nameTextField,
+                        //phoneTextField,
+                        cnicTextField,
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
                         SizedBox(
                           width: width,
                           height: height * 0.07,
                           child: RaisedButton(
                             color: Colors.white,
                             shape: StadiumBorder(),
-                            onPressed: () {
-                              if (nameTextFieldController.text != "" ||
-                                  phNumberTextController.text != "" ||
-                                  cnicTextController.text != "") {
-                                Firestore.instance
-                                    .collection('doctorInfo')
-                                    .document(nameTextFieldController.text)
-                                    .setData({
-                                  'cnic': cnicTextController.text,
-                                  'phoneNumber': phNumberTextController.text,
-                                });
-                                _signIn(context)
-                                    .then((FirebaseUser user) =>
-                                        print('Gmail Logged In'))
-                                    .catchError((e) => print(e));
-                                nameTextFieldController.clear();
-                                cnicTextController.clear();
-                                phNumberTextController.clear();
-                              } else {
-                                Toast.show('Fields Cannot be Empty!', context,
-                                    backgroundColor: Colors.red,
-                                    gravity: Toast.CENTER,
-                                    duration: Toast.LENGTH_SHORT);
-                              }
+                            onPressed: ()  {
+                              setState(() {
+                                _controllerCNIC.text.isEmpty ? validateCNICVar = true
+                                : validateCNICVar = false;
+                                _controllerName.text.isEmpty ? validateName = true
+                                : validateName = false;
+                              });
+                                !validateName & !validateCNICVar ? getInfoAndLogin() :
+                                    Toast.show("Empty Field(s) Found!", context, backgroundColor: Colors.red, backgroundRadius: 5, duration: Toast.LENGTH_LONG);
+
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Image(
-                                  image: AssetImage('assets/google.png'),
-                                  height: ScreenUtil.instance.setHeight(35),
+                                WidgetAnimator(
+                                  Image(
+                                    image: AssetImage('assets/google.png'),
+                                    height: height * 0.035,
+                                  ),
                                 ),
-                                SizedBox(width: ScreenUtil.instance.setWidth(15)),
+                                SizedBox(width: height * 0.015),
                                 Text(
                                   'Login',
                                   style: TextStyle(
                                       letterSpacing: 2,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: ScreenUtil.instance.setSp(18)),
+                                      fontSize: height * 0.022),
                                 )
                               ],
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: height * 0.02,),
-                      FadeAnimation(
-                        2,
-                        Text(
-                          'You Will be asked Question regarding your Qualifications!', textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black.withOpacity(0.5),),
+                        SizedBox(
+                          height: height * 0.02,
                         ),
-                      ),
-                    ],
+                        WidgetAnimator(
+                          Text(
+                            'You Will be asked Question regarding your Qualifications!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.2,)
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );
