@@ -4,13 +4,13 @@ A new Flutter application.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+# Screen Shots
 
-A few resources to get you started if this is your first Flutter project:
+## Welcome and User Type
+<img src="images/welcome.jpg" width = 200> <img src="images/user.jpg" width = 200>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Doctor Part
+<img src="images/doctoLogin.jpg" width = 200> <img src="images/doctorpanel.jpg" width = 200> <img src="images/doctorEdit.jpg" width = 200> <img src="images/doctorProfile.jpg" width = 200>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Patient Part
+<img src="images/patientLogin.jpg" width = 200> <img src="images/patientPanel.jpg" width = 200> <img src="images/medDetails.jpg" width = 200> <img src="images/doctorDetails.jpg" width = 200> <img src="images/patientProfile.jpg" width = 200>
