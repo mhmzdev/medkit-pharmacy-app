@@ -13,14 +13,14 @@ It holds two major parts
 1. Doctor
 2. Patient
 
-## Doctor
+# Doctor
 A doctor can perform various functions like:
 1. Adding Diseases/Medicines
 2. Viewing Diseases/Medicines
 3. Deleting Diseases
 4. Profile Updating
 
-## Patient
+# Patient
 A patient can perform various functions like:
 1. Viewing Medicines/Diseases
 2. Viewing Doctor Details who posted the disease
