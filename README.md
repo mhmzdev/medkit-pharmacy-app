@@ -27,6 +27,10 @@ A patient can perfrom various functions like:
 2. Viewing Doctor Details who posted the disease
 3. Getting location of nearest pharmacy using Google Maps Application
 
+# How to run the code?
+Simply clone this repo in your directory, open it up using Android Studio or VSCode. Once the code is opened, get all the flutter packages by using "flutter pub get" command in terminal
+Then you can run the code using "flutter run" or pressing the play icon on top-right bar.
+
 # Screen Shots
 
 ## Welcome and User Type
