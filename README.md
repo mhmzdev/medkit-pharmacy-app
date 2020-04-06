@@ -1,13 +1,12 @@
 # medkit
 
-It's a Pharmacy application that help you in curing basic symptoms or diseases with medicines available in your homes.
+It's a Pharmacy application that helps you in curing basic symptoms or diseases with medicines available in your homes.
 
 ## Problem
-It is very often that we have medicines in our homes and we don't know what they are about, or what disease or symptoms we can treat with it. So, we went to pharmacy and bought new ones. Which wasts our medicines, money and time as well.
+It is very often that we have medicines in our homes and we don't know what they are about, or what disease or symptoms we can treat with it. So, we went to a pharmacy and bought new ones which waste our medicines, money and time as well.
 
 ## Solution
-Medkit - will provide you basic information about varoious disease and information regarding some medicines along with their proper dose and time on which the medicines should be take on intial stages. If the medicine is not available then you can use "Search nearest Pharmacy" option to get to nearest phramacy via Google Maps application.
-It basically holds two panels: Doctor and Patient and each of them bears various functionalities.
+Medkit - will provide you with basic information about various disease and information regarding some medicines along with their proper dose and time on which the medicines should be taken on initial stages. If the medicine is not available then you can use the "Search nearest Pharmacy" option to get to the nearest pharmacy via Google Maps application. It holds two panels: Doctor and Patient and each of them bear various functionalities.
 
 ## Features
 It holds two major parts
@@ -15,17 +14,17 @@ It holds two major parts
 2. Patient
 
 # Doctor
-A doctor can perform various funtions like:
+A doctor can perform various functions like:
 1. Adding Diseases/Medicines
 2. Viewing Diseases/Medicines
 3. Deleting Diseases
 4. Profile Updating
 
 # Patient
-A patient can perfrom various functions like:
+A patient can perform various functions like:
 1. Viewing Medicines/Diseases
 2. Viewing Doctor Details who posted the disease
-3. Getting location of nearest pharmacy using Google Maps Application
+3. Getting the location of the nearest pharmacy using Google Maps Application
 
 # How to run the code?
 Simply clone this repo in your directory, open it up using Android Studio or VSCode. Once the code is opened, get all the flutter packages by using "flutter pub get" command in terminal
