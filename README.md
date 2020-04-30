@@ -2,10 +2,17 @@
 
 It's a Pharmacy application that help you in curing basic symptoms and diseases with medicines available in your home.
 
-## Getting Started
+<img src="images/MedKit.png">
+
+# How to run Code
+Clone or download the repo and place it anywhere in your computer. Open the folder in Android Studio or VS Code. Type the command:
+
+flutter pub get
+
+After the command is run successfully you can run the app on real device or on emulator by pressing the Play button in Android or by pressing F5 in VS Code.
+
 
 # Screen Shots
-<img src="images/MedKit.png">
 
 ## Welcome and User Type
 <img src="images/welcome.jpg" width = 200> <img src="images/user.jpg" width = 200>
