@@ -1,11 +1,12 @@
 # Medkit
 
-An app that will let you treat basic diseases and symptoms with medicines at your home.
+It's a Pharmacy application that help you in curing basic symptoms and diseases with medicines available in your home.
 
 ## Getting Started
 
 # Screen Shots
 <img src="images/MedKit.png">
+
 ## Welcome and User Type
 <img src="images/welcome.jpg" width = 200> <img src="images/user.jpg" width = 200>
 
