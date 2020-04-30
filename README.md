@@ -1,11 +1,11 @@
-# medkit
+# Medkit
 
-A new Flutter application.
+An app that will let you treat basic diseases and symptoms with medicines at your home.
 
 ## Getting Started
 
 # Screen Shots
-
+<img src="images/MedKit.png">
 ## Welcome and User Type
 <img src="images/welcome.jpg" width = 200> <img src="images/user.jpg" width = 200>
 
